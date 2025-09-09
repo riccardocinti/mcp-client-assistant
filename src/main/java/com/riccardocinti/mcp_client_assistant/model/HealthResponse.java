@@ -1,6 +1,6 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant.model;
+package com.riccardocinti.mcp_client_assistant.model;
 
-import com.riccardocinti.mcp_client_assistant.mcp_client_assistant.service.OllamaService;
+import com.riccardocinti.mcp_client_assistant.service.OllamaService;
 
 import java.util.Map;
 

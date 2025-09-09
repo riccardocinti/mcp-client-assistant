@@ -1,4 +1,4 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant.service;
+package com.riccardocinti.mcp_client_assistant.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,19 +69,63 @@ public class OllamaService {
     }
 
     public String chatSimple(String userMessage) {
-        log.info("Processing simple chat message");
+        log.info("Smart chat processing: {}", userMessage);
+
+        boolean useTools = shouldUseTools(userMessage);
+        log.debug("Tools needed: {}", useTools);
+
+        if (useTools) {
+            return chatWithTools(userMessage);
+        } else {
+            return chatWithoutTools(userMessage);
+        }
+//        log.info("Processing simple chat message");
+//
+//        try {
+//            // Use the fluent API with MCP tools as runtime options
+//            // All other settings (model, temperature, etc.) come from application.yml
+//            return mcpChatClient.prompt()
+//                    .user(userMessage)
+//                    .options(mcpRuntimeOptions)  // Add MCP tools at runtime
+//                    .call()
+//                    .content();
+//
+//        } catch (Exception e) {
+//            log.error("Error in simple chat", e);
+//            throw new RuntimeException("Failed to get response from Ollama", e);
+//        }
+    }
+
+    public String chatWithTools(String userMessage) {
+        log.info("Processing chat WITH tools");
 
         try {
-            // Use the fluent API with MCP tools as runtime options
-            // All other settings (model, temperature, etc.) come from application.yml
+            // Include system prompt that encourages tool use when appropriate
             return mcpChatClient.prompt()
                     .user(userMessage)
-                    .options(mcpRuntimeOptions)  // Add MCP tools at runtime
+                    .options(mcpRuntimeOptions)  // Include MCP tools
                     .call()
                     .content();
 
         } catch (Exception e) {
-            log.error("Error in simple chat", e);
+            log.error("Error in chat with tools", e);
+            throw new RuntimeException("Failed to get response from Ollama", e);
+        }
+    }
+
+    public String chatWithoutTools(String userMessage) {
+        log.info("Processing chat WITHOUT tools");
+
+        try {
+            // No tools, just direct response
+            return mcpChatClient.prompt()
+                    .user(userMessage)
+                    // No .options() call - no tools available
+                    .call()
+                    .content();
+
+        } catch (Exception e) {
+            log.error("Error in chat without tools", e);
             throw new RuntimeException("Failed to get response from Ollama", e);
         }
     }
@@ -150,6 +194,23 @@ public class OllamaService {
                 0,  // Tool count would need to come from McpService if needed
                 isOllamaAvailable()
         );
+    }
+
+    private boolean shouldUseTools(String userMessage) {
+        String lowerMessage = userMessage.toLowerCase();
+
+        // Keywords that suggest tool usage might be needed
+        List<String> toolKeywords = List.of(
+                "file", "directory", "folder", "list", "create", "delete", "write",
+                "search", "find", "web", "internet", "google",
+                "database", "query", "sql",
+                "weather", "temperature", "forecast",
+                "calculate", "compute", "math",
+                "api", "fetch", "get", "post",
+                "current", "latest", "now", "today"
+        );
+
+        return toolKeywords.stream().anyMatch(lowerMessage::contains);
     }
 
     public record OllamaInfo(

@@ -1,4 +1,4 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant;
+package com.riccardocinti.mcp_client_assistant;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant.config;
+package com.riccardocinti.mcp_client_assistant.config;
 
-import com.riccardocinti.mcp_client_assistant.mcp_client_assistant.service.McpService;
+import com.riccardocinti.mcp_client_assistant.service.McpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

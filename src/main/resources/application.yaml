@@ -3,6 +3,7 @@ spring:
     name: mcp-client-assistant
   ai:
     ollama:
+      timeout: 300s
       chat:
         options:
           base-url: http://localhost:11434
@@ -15,6 +16,7 @@ spring:
             repeat-penalty: 1.2
     mcp:
       client:
+        request-timeout: 60s
         stdio:
           connections:
             github:
@@ -60,7 +62,7 @@ server:
     session:
       timeout: 30m
   tomcat:
-    connection-timeout: 120s
+    connection-timeout: 300s
 
 # Logging Configuration
 logging:

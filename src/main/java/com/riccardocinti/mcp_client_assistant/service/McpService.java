@@ -1,4 +1,4 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant.service;
+package com.riccardocinti.mcp_client_assistant.service;
 
 import io.modelcontextprotocol.client.McpSyncClient;
 import jakarta.annotation.PostConstruct;

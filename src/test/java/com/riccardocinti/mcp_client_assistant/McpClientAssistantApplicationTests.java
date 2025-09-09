@@ -1,4 +1,4 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant;
+package com.riccardocinti.mcp_client_assistant;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

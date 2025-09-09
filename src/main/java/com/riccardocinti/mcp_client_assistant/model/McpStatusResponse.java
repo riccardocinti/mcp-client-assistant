@@ -1,6 +1,6 @@
-package com.riccardocinti.mcp_client_assistant.mcp_client_assistant.model;
+package com.riccardocinti.mcp_client_assistant.model;
 
-import com.riccardocinti.mcp_client_assistant.mcp_client_assistant.service.McpService;
+import com.riccardocinti.mcp_client_assistant.service.McpService;
 
 import java.util.Map;
 
