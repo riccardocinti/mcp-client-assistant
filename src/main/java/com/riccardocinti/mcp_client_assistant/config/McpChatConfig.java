@@ -28,22 +28,13 @@ public class McpChatConfig {
     private final OllamaChatModel ollamaChatModel;
     private final McpService mcpService;
 
-    /**
-     * Creates a ChatClient bean that uses the auto-configured Ollama model.
-     * MCP tools are added as runtime options when making calls.
-     *
-     * @return ChatClient configured to use MCP tools
-     */
     @Bean
     @Primary
     public ChatClient mcpChatClient() {
         log.info("Creating ChatClient with MCP tools support");
 
-        // Just create a ChatClient with the auto-configured model
-        // The model already has all settings from application.yml
         ChatClient chatClient = ChatClient.builder(ollamaChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
-                // We'll add MCP tools at runtime for each call
                 .build();
 
         log.info("ChatClient created using model: {} with temperature: {}",
@@ -53,12 +44,6 @@ public class McpChatConfig {
         return chatClient;
     }
 
-    /**
-     * Creates runtime options with MCP tools.
-     * These options only include the tools - all other settings come from application.yml.
-     *
-     * @return OllamaOptions with only MCP tools configured
-     */
     @Bean
     public OllamaOptions mcpRuntimeOptions() {
         // Only specify what we're adding at runtime - the tools
@@ -68,11 +53,6 @@ public class McpChatConfig {
                 .build();
     }
 
-    /**
-     * Creates a ChatClient with debug logging enabled.
-     *
-     * @return ChatClient with debug advisor
-     */
     @Bean
     public ChatClient debugChatClient() {
         log.info("Creating debug ChatClient");
@@ -82,11 +62,6 @@ public class McpChatConfig {
                 .build();
     }
 
-    /**
-     * Creates a ChatClient with a helpful assistant system prompt.
-     *
-     * @return ChatClient with system prompt
-     */
     @Bean
     public ChatClient assistantChatClient() {
         return ChatClient.builder(ollamaChatModel)

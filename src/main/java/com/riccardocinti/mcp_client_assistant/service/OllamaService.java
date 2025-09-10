@@ -149,7 +149,7 @@ public class OllamaService implements AIService {
         String lowerMessage = userMessage.toLowerCase();
 
         String response = mcpChatClient.prompt("Analyse the user message and determine if it is needed to " +
-                        "call one of the available tools or not. Always return true or false.")
+                        "call one of the available tools or not. Always return JUST true or false in lowercase.")
                 .user(lowerMessage)
                 .call().content();
 
