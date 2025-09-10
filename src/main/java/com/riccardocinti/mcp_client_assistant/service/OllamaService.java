@@ -19,6 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class OllamaService implements AIService {
 
+    private static final String TOOL_DETECTION_PROMPT = """
+            Analyse the user message and determine if it is needed to call one of the available tools or not.
+            Always return JUST true or false in lowercase.
+            """;
+
     private final ChatClient mcpChatClient;
 
     private final OllamaOptions mcpRuntimeOptions;
@@ -148,8 +153,7 @@ public class OllamaService implements AIService {
     private boolean shouldUseTools(String userMessage) {
         String lowerMessage = userMessage.toLowerCase();
 
-        String response = mcpChatClient.prompt("Analyse the user message and determine if it is needed to " +
-                        "call one of the available tools or not. Always return JUST true or false in lowercase.")
+        String response = mcpChatClient.prompt(TOOL_DETECTION_PROMPT)
                 .user(lowerMessage)
                 .call().content();
 
