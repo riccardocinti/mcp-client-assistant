@@ -23,6 +23,7 @@ public class McpClientApplication {
 
     @PostConstruct
     public void init() {
+
         log.info("========================================");
         log.info("MCP Client Web Service Starting");
         log.info("Java Version: {}", System.getProperty("java.version"));

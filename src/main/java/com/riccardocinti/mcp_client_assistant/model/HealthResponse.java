@@ -1,7 +1,5 @@
 package com.riccardocinti.mcp_client_assistant.model;
 
-import com.riccardocinti.mcp_client_assistant.service.OllamaService;
-
 import java.util.Map;
 
 public record HealthResponse(
@@ -9,5 +7,5 @@ public record HealthResponse(
         boolean ollamaAvailable,
         boolean mcpServersHealthy,
         Map<String, Boolean> mcpServerStatus,
-        OllamaService.OllamaInfo ollamaInfo
+        OllamaInfo ollamaInfo
 ) {}

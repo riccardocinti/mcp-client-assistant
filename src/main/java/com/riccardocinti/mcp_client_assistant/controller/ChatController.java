@@ -1,9 +1,8 @@
 package com.riccardocinti.mcp_client_assistant.controller;
 
-import com.riccardocinti.mcp_client_assistant.mcp_client_assistant.model.*;
 import com.riccardocinti.mcp_client_assistant.model.*;
 import com.riccardocinti.mcp_client_assistant.service.McpService;
-import com.riccardocinti.mcp_client_assistant.service.OllamaService;
+import com.riccardocinti.mcp_client_assistant.service.AIService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final OllamaService ollamaService;
+    private final AIService AIService;
     private final McpService mcpService;
 
     @PostMapping("/chat")
@@ -26,7 +25,7 @@ public class ChatController {
         log.info("Received chat request: {}", request.message());
 
         try {
-            String response = ollamaService.chatSimple(request.message());
+            String response = AIService.chatSimple("", request.message());
             return ResponseEntity.ok(new ChatResponse(response, null, true));
         } catch (Exception e) {
             log.error("Error processing chat request", e);
@@ -45,7 +44,7 @@ public class ChatController {
         log.info("Processing conversation chat for ID: {}", conversationId);
 
         try {
-            String response = ollamaService.chat(request.message(), conversationId);
+            String response = AIService.chat(request.message(), conversationId);
             return ResponseEntity.ok(new ConversationResponse(
                     response,
                     conversationId,
@@ -69,7 +68,7 @@ public class ChatController {
         log.info("Chat with system prompt");
 
         try {
-            String response = ollamaService.chatWithSystemPrompt(
+            String response = AIService.chatWithSystemPrompt(
                     request.systemPrompt(),
                     request.message()
             );
@@ -84,7 +83,7 @@ public class ChatController {
     @DeleteMapping("/chat/conversation/{conversationId}")
     public ResponseEntity<Map<String, Object>> clearConversation(@PathVariable String conversationId) {
         log.info("Clearing conversation: {}", conversationId);
-        ollamaService.clearConversation(conversationId);
+        AIService.clearConversation(conversationId);
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "message", "Conversation cleared",
@@ -120,7 +119,7 @@ public class ChatController {
 
     @GetMapping("/health")
     public ResponseEntity<HealthResponse> health() {
-        boolean ollamaAvailable = ollamaService.isOllamaAvailable();
+        boolean ollamaAvailable = AIService.isLLMAvailable();
         var mcpStatus = mcpService.getServerStatus();
         boolean allMcpHealthy = mcpStatus.values().stream().allMatch(Boolean::booleanValue);
 
@@ -129,7 +128,7 @@ public class ChatController {
                 ollamaAvailable,
                 allMcpHealthy,
                 mcpStatus,
-                ollamaService.getOllamaInfo()
+                AIService.getLLMInfo()
         );
 
         return ResponseEntity.ok(health);
@@ -140,7 +139,7 @@ public class ChatController {
         return ResponseEntity.ok(Map.of(
                 "service", "MCP Client Web Service",
                 "version", "1.0.0",
-                "ollama", ollamaService.getOllamaInfo(),
+                "ollama", AIService.getLLMInfo(),
                 "mcp", Map.of(
                         "servers", mcpService.getServerStatus(),
                         "totalTools", mcpService.getToolCallbacks().length
